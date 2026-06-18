@@ -1,0 +1,23 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Local env (örnek dosya .env.example commitlenir)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+vite.err.log
+vite.out.log
+
+# TypeScript incremental build
+*.tsbuildinfo
+
+# Editor / OS
+.DS_Store
+.idea
+.vscode
