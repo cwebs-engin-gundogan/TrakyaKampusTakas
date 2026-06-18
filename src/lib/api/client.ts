@@ -10,9 +10,17 @@ import type {
 } from '../../types';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+const isLocalhost =
+  typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+// Yerelde Vite proxy'si (/ws-api) kullanılır; canlıda (Vercel WebSocket'i
+// proxy'leyemez) doğrudan backend'e bağlanılır. VITE_WS_BASE_URL her zaman
+// bu varsayılanı geçersiz kılabilir.
 export const WS_BASE_URL =
   import.meta.env.VITE_WS_BASE_URL ??
-  `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws-api`;
+  (isLocalhost
+    ? `ws://${window.location.host}/ws-api`
+    : 'wss://kampustakasnoktam.keserbaros.com');
 export const TOKEN_STORAGE_KEY = 'ktn_token';
 
 export const api = axios.create({
