@@ -68,7 +68,17 @@ export function AppShell() {
       <div className="min-w-0 flex-1 desktop:pl-72">
         <header className={cn('sticky top-0 z-30 border-b border-[color:var(--outline-variant)]/50 bg-background/92 backdrop-blur desktop:hidden', hideMobileBar ? 'hidden' : '')}>
           <div className="flex h-16 items-center gap-2 px-4">
-            <div className="flex-1 text-center text-lg font-extrabold">{title}</div>
+            <div className="flex items-center gap-2">
+              <Link
+                to="/kesfet"
+                aria-label="Ana sayfa"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-on-primary"
+              >
+                <Store className="h-5 w-5" />
+              </Link>
+              <span className="text-lg font-extrabold">{title}</span>
+            </div>
+            <div className="flex-1" />
             <IconBadge label="Mesajlar" count={unread} onClick={() => navigate('/mesajlar')}>
               <MessageCircle className="h-5 w-5" />
             </IconBadge>

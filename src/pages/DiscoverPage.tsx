@@ -33,23 +33,26 @@ export function DiscoverPage({ favoritesOnly = false }: { favoritesOnly?: boolea
   return (
     <div className="grid gap-5 desktop:grid-cols-[1fr_310px]">
       <section className="min-w-0">
-        <div className="mb-4 flex items-center gap-3">
+        <div className="mb-4 hidden items-center desktop:flex">
           <div>
-            <h1 className="hidden text-2xl font-extrabold desktop:block">{favoritesOnly ? 'Favoriler' : 'Keşfet'}</h1>
-            <p className="hidden text-sm text-muted desktop:block">{ads.length} ilan</p>
+            <h1 className="text-2xl font-extrabold">{favoritesOnly ? 'Favoriler' : 'Keşfet'}</h1>
+            <p className="text-sm text-muted">{ads.length} ilan</p>
           </div>
-          <div className="flex-1" />
-          {!favoritesOnly ? (
-            <Button variant="tonal" className="desktop:hidden" onClick={() => setFilterOpen(true)}>
-              <SlidersHorizontal className="h-4 w-4" />
-              Filtre
-            </Button>
-          ) : null}
         </div>
 
         {!favoritesOnly ? (
-          <div className="mb-4">
-            <SearchField value={filters.q} onChange={(q) => setFilters((prev) => ({ ...prev, q }))} />
+          <div className="mb-4 flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <SearchField value={filters.q} onChange={(q) => setFilters((prev) => ({ ...prev, q }))} />
+            </div>
+            <Button
+              variant="tonal"
+              aria-label="Filtre"
+              className="h-12 w-12 shrink-0 px-0 desktop:hidden"
+              onClick={() => setFilterOpen(true)}
+            >
+              <SlidersHorizontal className="h-5 w-5" />
+            </Button>
           </div>
         ) : null}
 
