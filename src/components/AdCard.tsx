@@ -7,9 +7,9 @@ import { categoryLabels, cn, formatPrice, resolveMediaUrl } from '../lib/utils';
 interface AdCardProps {
   ad: AdvertisementResponse;
   favorite: boolean;
-  inCart: boolean;
+  inCart?: boolean;
   onToggleFavorite: (id: number) => void;
-  onAddCart: (id: number) => void;
+  onAddCart?: (id: number) => void;
   compact?: boolean;
 }
 
@@ -43,14 +43,16 @@ export function AdCard({ ad, favorite, inCart, onToggleFavorite, onAddCart, comp
         <div className="mt-1 truncate text-xs text-muted">{ad.seller_full_name}</div>
         <div className="mt-1 text-[11px] font-semibold text-muted">{categoryLabels[ad.category]}</div>
       </Link>
-      <Button
-        variant={inCart ? 'tonal' : 'primary'}
-        className="mt-3 h-10 min-h-10 w-full rounded-sm px-3"
-        onClick={() => onAddCart(ad.id)}
-      >
-        <ShoppingCart className="h-4 w-4" />
-        {inCart ? 'Sepette' : 'Sepete Ekle'}
-      </Button>
+      {onAddCart ? (
+        <Button
+          variant={inCart ? 'tonal' : 'primary'}
+          className="mt-3 h-10 min-h-10 w-full rounded-sm px-3"
+          onClick={() => onAddCart(ad.id)}
+        >
+          <ShoppingCart className="h-4 w-4" />
+          {inCart ? 'Sepette' : 'Sepete Ekle'}
+        </Button>
+      ) : null}
     </article>
   );
 }

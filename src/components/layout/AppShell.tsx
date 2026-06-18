@@ -9,6 +9,7 @@ import {
   Store,
   User,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAppState } from '../../AppState';
@@ -62,11 +63,32 @@ export function AppShell() {
   const title = titles[location.pathname] ?? (location.pathname.startsWith('/ilan/') ? 'İlan Detayı' : location.pathname.startsWith('/satici/') ? 'Satıcı Profili' : 'KampüsTakasNoktam');
   const hideMobileBar = location.pathname.startsWith('/mesajlar/');
 
+  // Mobil üst bar: aşağı kaydırırken gizlenir, yukarı kaydırırken görünür.
+  const [barHidden, setBarHidden] = useState(false);
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (y < 12) setBarHidden(false);
+        else if (y > lastY + 6) setBarHidden(true);
+        else if (y < lastY - 6) setBarHidden(false);
+        lastY = y;
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-on-background desktop:flex">
       <DesktopSidebar />
       <div className="min-w-0 flex-1 desktop:pl-72">
-        <header className={cn('sticky top-0 z-30 border-b border-[color:var(--outline-variant)]/50 bg-background/92 backdrop-blur desktop:hidden', hideMobileBar ? 'hidden' : '')}>
+        <header className={cn('sticky top-0 z-30 border-b border-[color:var(--outline-variant)]/50 bg-background/92 backdrop-blur transition-transform duration-300 will-change-transform desktop:hidden', barHidden ? '-translate-y-full' : 'translate-y-0', hideMobileBar ? 'hidden' : '')}>
           <div className="flex h-16 items-center gap-2 px-4">
             <div className="flex items-center gap-2">
               <Link

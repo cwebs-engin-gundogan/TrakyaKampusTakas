@@ -43,8 +43,8 @@ export function LoginPage() {
           }
         })}
       >
-        <TextInput label="E-posta" type="email" error={form.formState.errors.email?.message} {...form.register('email')} />
-        <TextInput label="Şifre" type="password" error={form.formState.errors.password?.message} {...form.register('password')} />
+        <TextInput label="E-posta" type="email" autoComplete="username" error={form.formState.errors.email?.message} {...form.register('email')} />
+        <TextInput label="Şifre" type="password" autoComplete="current-password" error={form.formState.errors.password?.message} {...form.register('password')} />
         <div className="flex justify-end">
           <Link to="/sifremi-unuttum" className="text-sm font-bold text-primary">Şifremi unuttum</Link>
         </div>
@@ -81,9 +81,9 @@ export function RegisterPage() {
           }
         })}
       >
-        <TextInput label="Ad Soyad" error={form.formState.errors.full_name?.message} {...form.register('full_name')} />
-        <TextInput label="E-posta" type="email" error={form.formState.errors.email?.message} {...form.register('email')} />
-        <TextInput label="Şifre" type="password" error={form.formState.errors.password?.message} {...form.register('password')} />
+        <TextInput label="Ad Soyad" autoComplete="name" error={form.formState.errors.full_name?.message} {...form.register('full_name')} />
+        <TextInput label="E-posta" type="email" autoComplete="username" error={form.formState.errors.email?.message} {...form.register('email')} />
+        <TextInput label="Şifre" type="password" autoComplete="new-password" error={form.formState.errors.password?.message} {...form.register('password')} />
         <Button className="h-14 w-full rounded-lg" loading={form.formState.isSubmitting}>Kayıt ol</Button>
       </form>
       <Link to="/giris" className="mt-5 block text-center text-sm font-bold text-primary">Girişe dön</Link>

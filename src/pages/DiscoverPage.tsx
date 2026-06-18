@@ -15,7 +15,7 @@ import type { Filters } from '../types';
 export function DiscoverPage({ favoritesOnly = false }: { favoritesOnly?: boolean }) {
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [filterOpen, setFilterOpen] = useState(false);
-  const { favorites, isFavorite, toggleFavorite, addToCart, inCart } = useAppState();
+  const { favorites, isFavorite, toggleFavorite } = useAppState();
   const navigate = useNavigate();
   const query = useQuery({
     queryKey: ['ads', favoritesOnly ? 'favorites' : 'discover', filters, favorites],
@@ -65,9 +65,7 @@ export function DiscoverPage({ favoritesOnly = false }: { favoritesOnly?: boolea
                 key={ad.id}
                 ad={ad}
                 favorite={isFavorite(ad.id)}
-                inCart={inCart(ad.id)}
                 onToggleFavorite={toggleFavorite}
-                onAddCart={addToCart}
               />
             ))}
           </div>
