@@ -44,6 +44,13 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     enabled: Boolean(token),
     retry: false,
   });
+  const cartAdsQuery = useQuery({
+    queryKey: ['ads', 'cart-sync'],
+    queryFn: () => apiClient.listAds().then((response) => response.data),
+    enabled: Boolean(token) && cart.length > 0,
+    retry: false,
+    staleTime: 30_000,
+  });
 
   const setAuthToken = useCallback((nextToken: string | null) => {
     if (nextToken) {
@@ -68,6 +75,20 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener('ktn:unauthorized', handler);
     return () => window.removeEventListener('ktn:unauthorized', handler);
   }, [queryClient, setAuthToken]);
+
+  useEffect(() => {
+    if (!cartAdsQuery.data || cart.length === 0) return;
+    const validAdIds = new Set(cartAdsQuery.data.map((ad) => ad.id));
+    setCart((prev) => {
+      const seen = new Set<number>();
+      const next = prev.filter((id) => {
+        if (!validAdIds.has(id) || seen.has(id)) return false;
+        seen.add(id);
+        return true;
+      });
+      return next.length === prev.length && next.every((id, index) => id === prev[index]) ? prev : next;
+    });
+  }, [cart, cartAdsQuery.data, setCart]);
 
   const value = useMemo<AppStateValue>(() => ({
     user: userQuery.data ?? null,

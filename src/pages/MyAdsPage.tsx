@@ -35,10 +35,19 @@ export function MyAdsPage() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Link to={`/ilan/${ad.id}/duzenle`}><Button variant="icon" aria-label="Düzenle"><Pencil className="h-4 w-4" /></Button></Link>
+                  <Link to={`/ilan/${ad.id}/duzenle`}>
+                    <Button
+                      variant="icon"
+                      aria-label="Düzenle"
+                      className="h-11 w-11 rounded-lg border border-[color:var(--primary-35)] bg-background text-primary shadow-card"
+                    >
+                      <Pencil className="h-5 w-5" strokeWidth={2.75} />
+                    </Button>
+                  </Link>
                   <Button
                     variant="icon"
                     aria-label="Sil"
+                    className="h-11 w-11 rounded-lg border border-[color:var(--outline-variant)]/70 bg-background text-error shadow-card"
                     onClick={async () => {
                       try {
                         await apiClient.deleteAd(ad.id);
@@ -50,7 +59,7 @@ export function MyAdsPage() {
                       }
                     }}
                   >
-                    <Trash2 className="h-4 w-4 text-error" />
+                    <Trash2 className="h-5 w-5" strokeWidth={2.75} />
                   </Button>
                 </div>
               </article>

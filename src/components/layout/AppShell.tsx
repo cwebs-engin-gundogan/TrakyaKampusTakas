@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   Heart,
   Home,
   List,
@@ -34,6 +35,8 @@ const mobileNavItems = [
   { to: '/profil', label: 'Profil', icon: User },
 ];
 
+const mobileTopBarHomeRoutes = new Set(['/kesfet', '/favorilerim', '/ilan-ekle', '/ilanlarim', '/profil']);
+
 const titles: Record<string, string> = {
   '/kesfet': 'Keşfet',
   '/favorilerim': 'Favoriler',
@@ -62,6 +65,13 @@ export function AppShell() {
   const unread = (conversationsQuery.data ?? []).reduce((total, item) => total + item.unread_count, 0);
   const title = titles[location.pathname] ?? (location.pathname.startsWith('/ilan/') ? 'İlan Detayı' : location.pathname.startsWith('/satici/') ? 'Satıcı Profili' : 'KampüsTakasNoktam');
   const hideMobileBar = location.pathname.startsWith('/mesajlar/');
+  const showMobileHomeIcon = mobileTopBarHomeRoutes.has(location.pathname);
+
+  const goBack = () => {
+    const canGoBack = window.history.state && window.history.state.idx > 0;
+    if (canGoBack) navigate(-1);
+    else navigate('/kesfet');
+  };
 
   // Mobil üst bar: aşağı kaydırırken gizlenir, yukarı kaydırırken görünür.
   const [barHidden, setBarHidden] = useState(false);
@@ -91,13 +101,24 @@ export function AppShell() {
         <header className={cn('sticky top-0 z-30 border-b border-[color:var(--outline-variant)]/50 bg-background/92 backdrop-blur transition-transform duration-300 will-change-transform desktop:hidden', barHidden ? '-translate-y-full' : 'translate-y-0', hideMobileBar ? 'hidden' : '')}>
           <div className="flex h-16 items-center gap-2 px-4">
             <div className="flex items-center gap-2">
-              <Link
-                to="/kesfet"
-                aria-label="Ana sayfa"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-on-primary"
-              >
-                <Store className="h-5 w-5" />
-              </Link>
+              {showMobileHomeIcon ? (
+                <Link
+                  to="/kesfet"
+                  aria-label="Ana sayfa"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-on-primary"
+                >
+                  <Store className="h-5 w-5" />
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  aria-label="Geri dön"
+                  onClick={goBack}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[color:var(--outline-variant)]/70 bg-surface text-on-surface"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </button>
+              )}
               <span className="text-lg font-extrabold">{title}</span>
             </div>
             <div className="flex-1" />

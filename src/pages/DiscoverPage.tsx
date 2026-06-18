@@ -48,10 +48,10 @@ export function DiscoverPage({ favoritesOnly = false }: { favoritesOnly?: boolea
             <Button
               variant="tonal"
               aria-label="Filtre"
-              className="h-12 w-12 shrink-0 px-0 desktop:hidden"
+              className="h-12 w-12 shrink-0 rounded-[18px] border border-[color:var(--primary-35)] bg-[color:var(--primary-15)] px-0 shadow-card desktop:hidden"
               onClick={() => setFilterOpen(true)}
             >
-              <SlidersHorizontal className="h-5 w-5" />
+              <SlidersHorizontal className="h-7 w-7" strokeWidth={2.75} />
             </Button>
           </div>
         ) : null}
