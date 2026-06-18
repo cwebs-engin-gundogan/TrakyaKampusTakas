@@ -118,7 +118,7 @@ function ChatDetail({ conversation }: { conversation: Conversation }) {
   return (
     <div className="flex min-h-screen flex-col overflow-hidden bg-surface shadow-none desktop:h-full desktop:min-h-0 desktop:rounded-none">
       <header className="flex h-16 items-center gap-3 border-b border-[color:var(--outline-variant)]/60 px-4">
-        <button type="button" className="desktop:hidden" onClick={() => navigate('/kesfet')} aria-label="Ana sayfaya dön">
+        <button type="button" className="desktop:hidden" onClick={() => navigate('/mesajlar')} aria-label="Mesajlara dön">
           <ArrowLeft className="h-6 w-6" />
         </button>
         <Avatar name={conversation.participant_name} src={conversation.participant_image_url} size={40} />
@@ -157,10 +157,10 @@ function ChatDetail({ conversation }: { conversation: Conversation }) {
             onChange={(event) => setText(event.target.value)}
             rows={1}
             placeholder="Bir mesaj yaz..."
-            className="min-h-12 flex-1 resize-none rounded-lg border border-[color:var(--primary-35)] bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+            className="min-h-14 flex-1 resize-none rounded-lg border border-[color:var(--primary-35)] bg-background px-4 py-3 text-sm outline-none focus:border-primary"
           />
-          <Button variant="primary" className="h-12 w-12 rounded-full px-0" onClick={send} aria-label="Gönder">
-            <Send className="h-5 w-5" />
+          <Button variant="primary" className="h-14 w-14 shrink-0 rounded-full px-0" onClick={send} aria-label="Gönder">
+            <Send className="h-6 w-6" />
           </Button>
         </div>
       </footer>

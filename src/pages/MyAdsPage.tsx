@@ -37,17 +37,17 @@ export function MyAdsPage() {
                 <div className="flex flex-col gap-2">
                   <Link to={`/ilan/${ad.id}/duzenle`}>
                     <Button
-                      variant="icon"
+                      variant="primary"
                       aria-label="Düzenle"
-                      className="h-12 w-12 rounded-lg border border-[color:var(--primary-35)] bg-[color:var(--primary-12)] text-primary shadow-card"
+                      className="h-14 w-14 rounded-lg px-0 shadow-card"
                     >
-                      <Pencil className="h-6 w-6" strokeWidth={2.5} />
+                      <Pencil className="h-7 w-7" strokeWidth={2.5} />
                     </Button>
                   </Link>
                   <Button
-                    variant="icon"
+                    variant="destructive"
                     aria-label="Sil"
-                    className="h-12 w-12 rounded-lg border border-[color:var(--primary-35)] bg-background text-error shadow-card"
+                    className="h-14 w-14 rounded-lg px-0 shadow-card"
                     onClick={async () => {
                       try {
                         await apiClient.deleteAd(ad.id);
@@ -59,7 +59,7 @@ export function MyAdsPage() {
                       }
                     }}
                   >
-                    <Trash2 className="h-6 w-6" strokeWidth={2.5} />
+                    <Trash2 className="h-7 w-7" strokeWidth={2.5} />
                   </Button>
                 </div>
               </article>

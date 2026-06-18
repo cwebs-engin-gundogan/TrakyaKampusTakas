@@ -114,7 +114,7 @@ export function AppShell() {
                 <button
                   type="button"
                   aria-label="Geri dön"
-                  onClick={goBack}
+                  onClick={() => (location.pathname === '/mesajlar' ? navigate('/kesfet') : goBack())}
                   className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[color:var(--outline-variant)]/70 bg-surface text-on-surface"
                 >
                   <ArrowLeft className="h-5 w-5" />
