@@ -39,15 +39,15 @@ export function MyAdsPage() {
                     <Button
                       variant="icon"
                       aria-label="Düzenle"
-                      className="h-11 w-11 rounded-lg border border-[color:var(--primary-35)] bg-background text-primary shadow-card"
+                      className="h-12 w-12 rounded-lg border border-[color:var(--primary-35)] bg-[color:var(--primary-12)] text-primary shadow-card"
                     >
-                      <Pencil className="h-5 w-5" strokeWidth={2.75} />
+                      <Pencil className="h-6 w-6" strokeWidth={2.5} />
                     </Button>
                   </Link>
                   <Button
                     variant="icon"
                     aria-label="Sil"
-                    className="h-11 w-11 rounded-lg border border-[color:var(--outline-variant)]/70 bg-background text-error shadow-card"
+                    className="h-12 w-12 rounded-lg border border-[color:var(--primary-35)] bg-background text-error shadow-card"
                     onClick={async () => {
                       try {
                         await apiClient.deleteAd(ad.id);
@@ -59,7 +59,7 @@ export function MyAdsPage() {
                       }
                     }}
                   >
-                    <Trash2 className="h-5 w-5" strokeWidth={2.75} />
+                    <Trash2 className="h-6 w-6" strokeWidth={2.5} />
                   </Button>
                 </div>
               </article>

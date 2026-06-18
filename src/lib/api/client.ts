@@ -4,6 +4,7 @@ import type {
   AdvertisementResponse,
   AttachmentResponse,
   Conversation,
+  FavoriteStatusResponse,
   MessageResponse,
   SellerProfileResponse,
   UserResponse,
@@ -100,6 +101,15 @@ export const apiClient = {
     const form = new FormData();
     files.forEach((file) => form.append('files', file));
     return api.post<AdvertisementResponse>(`/ads/${id}/images`, form);
+  },
+  getAdFavoriteStatus(id: number) {
+    return api.get<FavoriteStatusResponse>(`/ads/${id}/favorite`);
+  },
+  favoriteAd(id: number) {
+    return api.post<FavoriteStatusResponse>(`/ads/${id}/favorite`);
+  },
+  unfavoriteAd(id: number) {
+    return api.delete<FavoriteStatusResponse>(`/ads/${id}/favorite`);
   },
   seller(id: string) {
     return api.get<SellerProfileResponse>(`/users/${id}`);

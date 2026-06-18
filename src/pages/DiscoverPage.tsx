@@ -15,20 +15,23 @@ import type { Filters } from '../types';
 export function DiscoverPage({ favoritesOnly = false }: { favoritesOnly?: boolean }) {
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [filterOpen, setFilterOpen] = useState(false);
-  const { favorites, isFavorite, toggleFavorite } = useAppState();
+  const { favorites, isFavorite, toggleFavorite, addToCart, inCart } = useAppState();
   const navigate = useNavigate();
   const query = useQuery({
-    queryKey: ['ads', favoritesOnly ? 'favorites' : 'discover', filters, favorites],
+    queryKey: ['ads', favoritesOnly ? 'favorites' : 'discover', filters],
     queryFn: async () => {
       const params = toAdParams(filters);
       const response = favoritesOnly ? await apiClient.listAds() : await apiClient.discover(params);
       const serverAds = response.data;
-      const textFiltered = filters.q ? filterAds(serverAds, { q: filters.q }) : serverAds;
-      return favoritesOnly ? textFiltered.filter((ad) => favorites.includes(ad.id)) : textFiltered;
+      return filters.q ? filterAds(serverAds, { q: filters.q }) : serverAds;
     },
   });
 
-  const ads = useMemo(() => query.data ?? [], [query.data]);
+  // Favori filtresi render'da yapılır; favori toggle'ı yeniden veri çekmesin diye queryKey'de favorites yok.
+  const ads = useMemo(() => {
+    const list = query.data ?? [];
+    return favoritesOnly ? list.filter((ad) => favorites.includes(ad.id)) : list;
+  }, [query.data, favoritesOnly, favorites]);
 
   return (
     <div className="grid gap-5 desktop:grid-cols-[1fr_310px]">
@@ -51,7 +54,7 @@ export function DiscoverPage({ favoritesOnly = false }: { favoritesOnly?: boolea
               className="h-12 w-12 shrink-0 rounded-[18px] border border-[color:var(--primary-35)] bg-[color:var(--primary-15)] px-0 shadow-card desktop:hidden"
               onClick={() => setFilterOpen(true)}
             >
-              <SlidersHorizontal className="h-7 w-7" strokeWidth={2.75} />
+              <SlidersHorizontal size={28} strokeWidth={3} className="shrink-0" />
             </Button>
           </div>
         ) : null}
@@ -65,7 +68,9 @@ export function DiscoverPage({ favoritesOnly = false }: { favoritesOnly?: boolea
                 key={ad.id}
                 ad={ad}
                 favorite={isFavorite(ad.id)}
+                inCart={inCart(ad.id)}
                 onToggleFavorite={toggleFavorite}
+                onAddCart={addToCart}
               />
             ))}
           </div>

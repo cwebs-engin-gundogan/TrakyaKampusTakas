@@ -33,7 +33,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [favorites, setFavorites] = useLocalStorage<number[]>('ktn_favorites', []);
   const [cart, setCart] = useLocalStorage<number[]>('ktn_cart', []);
   const [preferences, setPreferences] = useLocalStorage<AppPreferences>('ktn_preferences', {
-    theme: 'light',
+    theme: 'dark',
     language: 'tr',
     notifications: false,
   });
@@ -110,7 +110,14 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     },
     toggleFavorite: (id) => {
       setFavorites((prev) => {
-        const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
+        const nextIsFavorite = !prev.includes(id);
+        const next = nextIsFavorite ? [...prev, id] : prev.filter((item) => item !== id);
+        const request = nextIsFavorite ? apiClient.favoriteAd(id) : apiClient.unfavoriteAd(id);
+        void request.then((response) => {
+          queryClient.setQueryData(['ad-favorite', id], response.data);
+        }).catch(() => {
+          void queryClient.invalidateQueries({ queryKey: ['ad-favorite', id] });
+        });
         toast.success(next.includes(id) ? 'Favorilere eklendi' : 'Favorilerden çıkarıldı');
         return next;
       });

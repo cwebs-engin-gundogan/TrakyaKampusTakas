@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, BadgeCheck, Calendar, Heart, MapPin, MessageCircle, Pencil, ShoppingBasket, Tag } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { ArrowLeft, BadgeCheck, Calendar, Heart, MapPin, MessageCircle, Pencil, Tag } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/Button';
@@ -13,8 +13,26 @@ import { categoryLabels, conditionLabels, cn, formatPrice, formatShortDate, reso
 export function AdDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isFavorite, toggleFavorite, addToCart, inCart } = useAppState();
+  const queryClient = useQueryClient();
+  const { user, isFavorite, toggleFavorite } = useAppState();
   const query = useQuery({ queryKey: ['ad', id], queryFn: () => apiClient.getAd(Number(id)).then((response) => response.data) });
+  const favoriteQuery = useQuery({
+    queryKey: ['ad-favorite', Number(id)],
+    queryFn: async () => {
+      try {
+        const response = await apiClient.getAdFavoriteStatus(Number(id));
+        return response.data;
+      } catch {
+        return {
+          ad_id: Number(id),
+          favorite_count: isFavorite(Number(id)) ? 1 : 0,
+          is_favorited: isFavorite(Number(id)),
+        };
+      }
+    },
+    enabled: Boolean(id),
+    retry: false,
+  });
   const [active, setActive] = useState(0);
 
   if (query.isLoading) return <LoadingState />;
@@ -23,6 +41,17 @@ export function AdDetailPage() {
   const ad = query.data;
   const own = ad.seller_id === user?.id;
   const image = resolveMediaUrl(ad.image_urls[active] ?? ad.image_urls[0]);
+  const favorited = isFavorite(ad.id);
+  const favoriteCount = favoriteQuery.data?.favorite_count ?? (favorited ? 1 : 0);
+  const handleFavorite = () => {
+    const nextIsFavorite = !favorited;
+    queryClient.setQueryData(['ad-favorite', ad.id], {
+      ad_id: ad.id,
+      favorite_count: Math.max(0, favoriteCount + (nextIsFavorite ? 1 : -1)),
+      is_favorited: nextIsFavorite,
+    });
+    toggleFavorite(ad.id);
+  };
 
   return (
     <div>
@@ -58,24 +87,31 @@ export function AdDetailPage() {
                 <h1 className="text-xl font-extrabold desktop:text-2xl">{ad.title}</h1>
                 <div className="mt-2 text-[28px] font-extrabold leading-9 text-primary">{formatPrice(ad.price)}</div>
               </div>
-              <button
-                aria-label={isFavorite(ad.id) ? 'Favorilerden çıkar' : 'Favorilere ekle'}
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-[color:var(--primary-12)] text-on-surface"
-                onClick={() => toggleFavorite(ad.id)}
-              >
-                <Heart className={cn('h-5 w-5', isFavorite(ad.id) ? 'fill-error text-error' : '')} />
-              </button>
+              <div className="flex w-12 shrink-0 flex-col items-center gap-1">
+                <button
+                  aria-label={favorited ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-[color:var(--primary-12)] text-on-surface"
+                  onClick={handleFavorite}
+                >
+                  <Heart className={cn('h-5 w-5', favorited ? 'fill-error text-error' : '')} />
+                </button>
+                <span className="text-center text-xs font-extrabold leading-none text-muted" aria-label="Beğeni sayısı">
+                  {favoriteCount}
+                </span>
+              </div>
             </div>
             {own ? (
               <Link to={`/ilan/${ad.id}/duzenle`}>
                 <Button className="w-full" variant="tonal"><Pencil className="h-4 w-4" /> Düzenle</Button>
               </Link>
             ) : (
-              <div className="grid gap-3 tablet:grid-cols-2 desktop:grid-cols-1">
+              <div className="grid gap-3">
+                {/*
                 <Button onClick={() => addToCart(ad.id)} variant={inCart(ad.id) ? 'tonal' : 'primary'}>
                   <ShoppingBasket className="h-4 w-4" />
                   {inCart(ad.id) ? 'Sepette' : 'Sepete Ekle'}
                 </Button>
+                */}
                 <Button
                   variant="secondary"
                   onClick={async () => {

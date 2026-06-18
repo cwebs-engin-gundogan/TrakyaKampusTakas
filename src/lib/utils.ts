@@ -36,11 +36,18 @@ export function initials(name: string) {
     .join('');
 }
 
+// Görseller <img> ile (tarayıcıdan) yüklenir; CORS gerekmez. Vercel'de /api proxy'si
+// Cloudflare tarafından 403'lendiği için canlıda görseller doğrudan backend origin'inden
+// çekilir. Localhost'ta Vite proxy (kullanıcı IP'si) sorunsuz çalıştığından /api kullanılır.
+const mediaIsLocalhost =
+  typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const MEDIA_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? (mediaIsLocalhost ? '/api' : 'https://kampustakasnoktam.keserbaros.com');
+
 export function resolveMediaUrl(url?: string | null) {
   if (!url) return null;
   if (url.startsWith('http') || url.startsWith('data:') || url.startsWith('blob:')) return url;
-  const base = import.meta.env.VITE_API_BASE_URL ?? '/api';
-  return `${base}${url.startsWith('/') ? '' : '/'}${url}`;
+  return `${MEDIA_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
 export function formatShortDate(date: string) {

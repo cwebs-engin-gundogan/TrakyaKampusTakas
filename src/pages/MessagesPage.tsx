@@ -37,7 +37,7 @@ export function MessagesPage() {
           />
         ))}
       </aside>
-      <section className={cn(!id ? 'hidden desktop:block' : '')}>
+      <section className={cn('min-h-screen desktop:min-h-0', !id ? 'hidden desktop:block' : '')}>
         <ChatDetail conversation={conversations.find((item) => item.id === selected) ?? conversations[0]} />
       </section>
     </div>
@@ -116,20 +116,27 @@ function ChatDetail({ conversation }: { conversation: Conversation }) {
   };
 
   return (
-    <div className="flex h-[calc(100vh-96px)] flex-col overflow-hidden rounded-auth bg-surface shadow-card desktop:h-full desktop:rounded-none desktop:shadow-none">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-surface shadow-none desktop:h-full desktop:min-h-0 desktop:rounded-none">
       <header className="flex h-16 items-center gap-3 border-b border-[color:var(--outline-variant)]/60 px-4">
-        <button type="button" className="desktop:hidden" onClick={() => navigate('/mesajlar')} aria-label="Mesajlara dön">
-          <ArrowLeft className="h-5 w-5" />
+        <button type="button" className="desktop:hidden" onClick={() => navigate('/kesfet')} aria-label="Ana sayfaya dön">
+          <ArrowLeft className="h-6 w-6" />
         </button>
         <Avatar name={conversation.participant_name} src={conversation.participant_image_url} size={40} />
         <div>
           <div className="font-bold">{conversation.participant_name}</div>
-          <div className="text-xs font-semibold text-success-online">{conversation.is_online ? 'Çevrimiçi' : 'Çevrimdışı'}</div>
+          <div className={cn('text-xs font-semibold', conversation.is_online ? 'text-success-online' : 'text-error')}>
+            {conversation.is_online ? 'Çevrimiçi' : 'Çevrimdışı'}
+          </div>
         </div>
         <div className="flex-1" />
-        <Button variant="icon" aria-label="Ara" onClick={() => toast.info('Arama özelliği mock')}>
-          <Phone className="h-5 w-5" />
-        </Button>
+        <button
+          type="button"
+          aria-label="Ara"
+          onClick={() => toast.info('Arama özelliği yakında eklenecek')}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[color:var(--primary-35)] bg-background text-primary transition hover:bg-[color:var(--primary-12)]"
+        >
+          <Phone className="h-6 w-6" />
+        </button>
       </header>
 
       <div className="scrollbar-soft flex-1 space-y-3 overflow-y-auto bg-background/50 p-4">
@@ -138,7 +145,7 @@ function ChatDetail({ conversation }: { conversation: Conversation }) {
         ))}
       </div>
 
-      <footer className="border-t border-[color:var(--outline-variant)]/60 bg-surface p-3">
+      <footer className="border-t border-[color:var(--outline-variant)]/60 bg-surface p-3 pb-[calc(env(safe-area-inset-bottom)+12px)] desktop:pb-3">
         <div className="mb-2 flex gap-2 text-muted">
           <button type="button" aria-label="Dosya ekle" className="rounded-full p-2 hover:bg-[color:var(--primary-12)]"><Paperclip className="h-5 w-5" /></button>
           <button type="button" aria-label="Fotoğraf ekle" className="rounded-full p-2 hover:bg-[color:var(--primary-12)]"><Image className="h-5 w-5" /></button>

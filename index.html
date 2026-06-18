@@ -13,6 +13,19 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="KampüsTakas" />
     <title>Trakya Kampüs Takas</title>
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem('ktn_preferences');
+          const theme = stored ? JSON.parse(stored).theme : 'dark';
+          document.documentElement.classList.toggle('dark', theme !== 'light');
+          document.documentElement.style.colorScheme = theme === 'light' ? 'light' : 'dark';
+        } catch {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

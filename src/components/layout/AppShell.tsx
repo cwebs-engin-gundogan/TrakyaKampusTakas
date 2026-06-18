@@ -35,7 +35,7 @@ const mobileNavItems = [
   { to: '/profil', label: 'Profil', icon: User },
 ];
 
-const mobileTopBarHomeRoutes = new Set(['/kesfet', '/favorilerim', '/ilan-ekle', '/ilanlarim', '/profil']);
+const mobileTopBarHomeRoutes = new Set(['/kesfet', '/favorilerim', '/ilanlarim', '/profil']);
 
 const titles: Record<string, string> = {
   '/kesfet': 'Keşfet',
@@ -65,6 +65,7 @@ export function AppShell() {
   const unread = (conversationsQuery.data ?? []).reduce((total, item) => total + item.unread_count, 0);
   const title = titles[location.pathname] ?? (location.pathname.startsWith('/ilan/') ? 'İlan Detayı' : location.pathname.startsWith('/satici/') ? 'Satıcı Profili' : 'KampüsTakasNoktam');
   const hideMobileBar = location.pathname.startsWith('/mesajlar/');
+  const fullBleedMobile = location.pathname.startsWith('/mesajlar/');
   const showMobileHomeIcon = mobileTopBarHomeRoutes.has(location.pathname);
 
   const goBack = () => {
@@ -133,7 +134,12 @@ export function AppShell() {
 
         <DesktopTopbar cartCount={cart.length} favoriteCount={favorites.length} unread={unread} />
 
-        <main className="safe-bottom mx-auto w-full max-w-[1280px] px-4 py-5 tablet:px-6 desktop:px-8 desktop:py-8">
+        <main
+          className={cn(
+            'mx-auto w-full max-w-[1280px] desktop:px-8 desktop:py-8',
+            fullBleedMobile ? 'px-0 py-0 desktop:safe-bottom' : 'safe-bottom px-4 py-5 tablet:px-6',
+          )}
+        >
           <Outlet />
         </main>
       </div>
@@ -241,7 +247,7 @@ function IconBadge({ children, count, label, onClick }: { children: React.ReactN
 
 function FloatingBottomNav() {
   const location = useLocation();
-  const visibleRoutes = new Set(['/kesfet', '/favorilerim', '/ilan-ekle', '/ilanlarim', '/profil']);
+  const visibleRoutes = new Set(['/kesfet', '/favorilerim', '/ilanlarim', '/profil']);
   if (!visibleRoutes.has(location.pathname)) return null;
 
   return (

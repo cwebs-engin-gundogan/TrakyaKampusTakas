@@ -29,6 +29,12 @@ export interface AdvertisementResponse {
   is_active: boolean;
 }
 
+export interface FavoriteStatusResponse {
+  ad_id: number;
+  favorite_count: number;
+  is_favorited: boolean;
+}
+
 export interface AdvertisementCreate {
   title: string;
   description: string;

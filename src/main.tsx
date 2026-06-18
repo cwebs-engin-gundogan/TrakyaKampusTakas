@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <AppStateProvider>
           <App />
-          <Toaster richColors position="top-center" />
+          <Toaster richColors closeButton position="top-center" />
         </AppStateProvider>
       </QueryClientProvider>
     </BrowserRouter>

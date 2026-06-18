@@ -29,9 +29,10 @@ export function AdCard({ ad, favorite, inCart, onToggleFavorite, onAddCart, comp
           type="button"
           aria-label={favorite ? 'Favorilerden çıkar' : 'Favorilere ekle'}
           onClick={() => onToggleFavorite(ad.id)}
-          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-surface/90 text-on-surface shadow-card leading-none"
+          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full p-0 text-on-surface leading-none"
         >
-          <Heart className={cn('h-5 w-5', favorite ? 'fill-error text-error' : '')} />
+          <span className="absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full bg-surface/95 shadow-card backdrop-blur-sm" />
+          <Heart className={cn('relative z-10 h-5 w-5', favorite ? 'fill-error text-error' : '')} />
         </button>
       </div>
       <Link to={`/ilan/${ad.id}`} className="mt-2 block">
