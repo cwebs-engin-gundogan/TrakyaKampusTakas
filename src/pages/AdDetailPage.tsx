@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, BadgeCheck, Calendar, Heart, MapPin, MessageCircle, Pencil, Tag } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, Calendar, Heart, MapPin, MessageCircle, Pencil, ShoppingBasket, Tag } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/Button';
@@ -14,7 +14,7 @@ export function AdDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { user, isFavorite, toggleFavorite } = useAppState();
+  const { user, isFavorite, toggleFavorite, addToCart, inCart } = useAppState();
   const query = useQuery({ queryKey: ['ad', id], queryFn: () => apiClient.getAd(Number(id)).then((response) => response.data) });
   const favoriteQuery = useQuery({
     queryKey: ['ad-favorite', Number(id)],
@@ -106,12 +106,10 @@ export function AdDetailPage() {
               </Link>
             ) : (
               <div className="grid gap-3">
-                {/*
                 <Button onClick={() => addToCart(ad.id)} variant={inCart(ad.id) ? 'tonal' : 'primary'}>
                   <ShoppingBasket className="h-4 w-4" />
                   {inCart(ad.id) ? 'Sepette' : 'Sepete Ekle'}
                 </Button>
-                */}
                 <Button
                   variant="secondary"
                   onClick={async () => {
